@@ -9,17 +9,17 @@ A Browserify transform to replace `img` tag with inline svg.
 Add the Browserify transform and pass in the `basePath`:
 ```javascript
 var browserify = require("browserify");
-var inlineSvg  = require("browserify-inline-svg");
+var isvg       = require("browserify-isvg");
 
 browserify("index.js")
-    .transform(inlineSvg, {basePath: "./app"})
+    .transform(isvg, {basePath: "./app"})
     .bundle()
     .pipe(process.stdout);
 ```
 
-This transform targets img tags with `data-inline-svg` attrubute:
+This transform targets img tags with `data-isvg` attribute:
 
 ```html
-<img src="path/to/my.svg" class="my-svg" data-inline-svg />
+<img src="path/to/my.svg" class="my-svg" data-isvg />
 ```
-After the transform, the `img` tag is replace by the content of the svg file.
+After the transform, the `img` tag is replaced by the content of the svg file.

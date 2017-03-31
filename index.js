@@ -21,7 +21,7 @@ module.exports = function (file, opts) {
         if (img) {
             let imgSvg = [];
             for (let i = 0; i < img.length; i++) {
-                if (img[i].indexOf("data-inline-svg") !== -1)
+                if (img[i].indexOf("data-isvg") !== -1)
                     imgSvg.push(img[i]);
             }
 
