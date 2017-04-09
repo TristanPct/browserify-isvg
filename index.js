@@ -5,17 +5,25 @@ const fs = require("fs");
 module.exports = function (file, opts) {
     let xmlRegex = /<\?xml(?:.*?)>/i;
     let imgRegex = /<img(?:.*?)>/gi;
-    let attributesRegex = /\s([\w:_-]+)(?:=["'](.*?)["'])?/i;
+    let attributesRegex = /\s([\w:_-]+)(?:=(["'])(.*?)\2)?/i;
 
     function getAttributes(tag) {
         let attributes = {};
-        let attrs = tag.replace("<img", "").replace(">", "").split(attributesRegex);
+        let attrs = tag.replace("<img", "").replace(/\/?>/, "").split(attributesRegex);
 
-        for (let i = 1; i < attrs.length; i+=3) {
-            attributes[attrs[i]] = attrs[i+1];
+        for (let i = 1; i < attrs.length; i+=4) {
+            attributes[attrs[i]] = {
+                name: attrs[i],
+                value: attrs[i+2],
+                separator: attrs[i+1]
+            };
         }
 
         return attributes;
+    }
+
+    function getAttributeString(attribute) {
+        return attribute.name + (isDefined(attribute.value) ? "=" + attribute.separator + attribute.value + attribute.separator : "");
     }
 
     function isDefined(value) {
@@ -42,20 +50,18 @@ module.exports = function (file, opts) {
                 let filePath;
                 let fileContent;
                 let attributes;
-                let value;
 
                 for (let i = 0; i < imgSvg.length; i++) {
                     attributes = getAttributes(imgSvg[i]);
 
-                    filePath = opts.basePath + attributes["src"];
+                    filePath = opts.basePath + attributes["src"].value;
                     fileContent = fs.readFileSync(filePath, "utf8").replace(xmlRegex, "");
 
                     for (let name in attributes) {
                         if (!attributes.hasOwnProperty(name) || name === "src" || name === "data-isvg")
                             continue;
 
-                        value = isDefined(attributes[name]) ? "=\"" + attributes[name] + "\"" : "";
-                        fileContent = fileContent.replace("<svg", "<svg " + name + value + " ");
+                        fileContent = fileContent.replace("<svg", "<svg " + getAttributeString(attributes[name]) + " ");
                     }
 
                     content = content.replace(imgSvg[i], fileContent.trim());

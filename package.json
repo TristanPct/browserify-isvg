@@ -1,6 +1,6 @@
 {
   "name": "browserify-isvg",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A Browserify transform to replace img tag with inline svg.",
   "author": "Tristan Picut <tristan@picut.fr>",
   "repository": {
