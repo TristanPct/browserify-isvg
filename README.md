@@ -23,3 +23,5 @@ This transform targets img tags with `data-isvg` attribute:
 <img src="path/to/my.svg" class="my-svg" data-isvg />
 ```
 After the transform, the `img` tag is replaced by the content of the svg file.
+
+All attributes are transfered to the new `svg` tag except `src` and `data-isvg`.
